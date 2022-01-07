@@ -9,10 +9,27 @@ class Board:
 
     def check_winner(self, column: int) -> bool:
         lin, col = self.__which_line_to_add(column)+1, column
-        print(self.board[lin])
         # check for horizontal lines
-        for shift in range(4):
-            pass
+        line = self.board[lin] # the line to test
+        for shift in range(-3, 3):
+            if col+shift+4 > self.TAILLE_GRILLE_X:
+                break
+            four_pieces = line[col+shift:col+shift+4]
+            print(four_pieces)
+            if len(set(four_pieces)) == 1 and four_pieces[0] != 0:
+                self.__winner = four_pieces[0]
+                return True
+        # check for horizontal lines
+        column = list(map(lambda x: x[col], self.board)) # the column to test
+        for shift in range(-3, 3):
+            if lin+shift+4 > self.TAILLE_GRILLE_X:
+                break
+            four_pieces = column[lin+shift:lin+shift+4]
+            print(four_pieces)
+            if len(set(four_pieces)) == 1 and four_pieces[0] != 0:
+                self.__winner = four_pieces[0]
+                return True
+        # check for diagonal lines
 
     def play(self, player: int, column: int) -> bool:
         """Check if the movement is legal and the play it.
@@ -38,8 +55,9 @@ class Board:
         return False
 
     def __str__(self):
-        result = ""
+        result = '┏' + "━"*self.TAILLE_GRILLE_X + '┓\n'
         for line in self.board:
+            result += '┃'
             for cell in line:
                 if cell == 0:
                     result += " "
@@ -49,7 +67,8 @@ class Board:
                     result += "X"
                 else:
                     result += "~"
-            result += "\n"
+            result += "┃\n"
+        result += '┗' + "━"*self.TAILLE_GRILLE_X + '┛'
         return result
 
 
@@ -74,13 +93,14 @@ if __name__ == "__main__":
     users = Users()
 
     my_game.play(users.current(), 2)
-    my_game.play(users.current(), 2)
+    my_game.play(users.current(), 6)
     my_game.play(users.current(), 3)
-    my_game.play(users.current(), 3)
+    my_game.play(users.current(), 6)
     my_game.play(users.current(), 4)
-    my_game.play(users.current(), 4)
+    my_game.play(users.current(), 6)
     my_game.play(users.current(), 5)
+    my_game.play(users.current(), 6)
     print(my_game)
-    print(my_game.check_winner(5))
+    print(my_game.check_winner(6))
 
 

@@ -1,2 +1,4 @@
 
 *.swp
+.vim/.ropeproject/config.py
+.vim/.ropeproject/objectdb

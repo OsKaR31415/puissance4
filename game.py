@@ -1,5 +1,15 @@
 #!/usr/bin/python3
 
+def all_equal_and_non_zero(list_pieces: list[int]) -> bool:
+    # if there is one zero, they can't be all equal *and non zero*
+    if list_pieces[0] == 0:
+        return False
+    # if the set is only one element, they are all equal
+    if len(set(list_pieces)) == 1:
+        return True
+    # else, they are different
+    return False
+
 class Board:
     TAILLE_GRILLE_X = 10
     TAILLE_GRILLE_Y = 6
@@ -10,28 +20,65 @@ class Board:
         self.__winner = None
 
     def check_winner(self, column: int) -> bool:
+        # coordinates of the last added piece
         lin, col = self.__which_line_to_add(column)+1, column
+
         # check for horizontal lines
         line = self.board[lin] # the line to test
-        for shift in range(-3, 3):
+        for shift in range(-3, 4):
             if col+shift+4 > self.TAILLE_GRILLE_X:
                 break
             four_pieces = line[col+shift:col+shift+4]
-            print(four_pieces)
-            if len(set(four_pieces)) == 1 and four_pieces[0] != 0:
+            print('-', four_pieces)
+            if all_equal_and_non_zero(four_pieces):
                 self.__winner = four_pieces[0]
                 return True
+
         # check for horizontal lines
         column = list(map(lambda x: x[col], self.board)) # the column to test
-        for shift in range(-3, 3):
+        for shift in range(-3, 4):
             if lin+shift+4 > self.TAILLE_GRILLE_X:
                 break
             four_pieces = column[lin+shift:lin+shift+4]
-            print(four_pieces)
-            if len(set(four_pieces)) == 1 and four_pieces[0] != 0:
+            if len(four_pieces) != 4:
+                continue
+            print('|', four_pieces)
+            if all_equal_and_non_zero(four_pieces):
                 self.__winner = four_pieces[0]
                 return True
+
         # check for diagonal lines
+        for shift in range(-3, 4):
+            # / diagonal
+            try:
+                four_pieces = [self.board[col+x+shift-4][lin+x+shift-4]
+                        for x in range(4)]
+            except IndexError:
+                print('.')
+                continue
+            if len(four_pieces) != 4:  # must be of length 4
+                continue
+            print('/', four_pieces)
+            if all_equal_and_non_zero(four_pieces):
+                self.__winner = four_pieces[0]
+                return False
+
+            # \ diagonal
+            try:
+                four_pieces = [self.board[col+x+shift][lin-x-shift]
+                    for x in range(4)]
+            except IndexError:
+                print('.')
+                continue
+            if len(four_pieces) != 4:  # must be of length 4
+                continue
+            print('\\', four_pieces)
+            if all_equal_and_non_zero(four_pieces):
+                self.__winner = four_pieces[0]
+                return True
+        return False
+
+
 
     def play(self, player: int, column: int) -> bool:
         """Check if the movement is legal and the play it.
@@ -95,13 +142,16 @@ if __name__ == "__main__":
     users = Users()
 
     my_game.play(users.current(), 2)
-    my_game.play(users.current(), 6)
     my_game.play(users.current(), 3)
-    my_game.play(users.current(), 6)
+    my_game.play(users.current(), 3)
     my_game.play(users.current(), 4)
-    my_game.play(users.current(), 6)
+    my_game.play(users.current(), 5)
+    my_game.play(users.current(), 4)
+    my_game.play(users.current(), 4)
+    my_game.play(users.current(), 5)
     my_game.play(users.current(), 5)
     my_game.play(users.current(), 6)
+    my_game.play(users.current(), 5)
     print(my_game)
     print(my_game.check_winner(6))
 

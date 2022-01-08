@@ -1,7 +1,9 @@
+#!/usr/bin/python3
 
 class Board:
     TAILLE_GRILLE_X = 10
     TAILLE_GRILLE_Y = 6
+
     def __init__(self):
         self.board = [[0 for _ in range(self.TAILLE_GRILLE_X)]
                 for _ in range(self.TAILLE_GRILLE_Y)]

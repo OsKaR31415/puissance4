@@ -88,14 +88,18 @@ class Board:
         self.__add_at_column(player, column)
         return True
 
-    def __add_at_column(self, player: int, column: int) -> None:
+    def __add_at_column(self, player: int, column: int) -> None:       
         """Add the player's piece at the correct column."""
         self.board[self.__which_line_to_add(column)][column] = int(player)
 
     def __which_line_to_add(self, column: int) -> int:
         row_index = 0
-        while self.board[row_index][column] == 0 and row_index < len(self.board) -1:
-            row_index += 1
+        try:
+            while self.board[row_index][column] == 0:
+                row_index += 1
+        except IndexError:
+            pass
+        # The correct row is one before the indexError
         return row_index - 1
 
     def is_column_full(self, column: int) -> bool:
@@ -117,7 +121,7 @@ class Board:
                 else:
                     result += "~"
             result += "┃\n"
-        result += '┗' + "━"*self.TAILLE_GRILLE_X + '┛'
+        result += '┗' + "┻"*self.TAILLE_GRILLE_X + '┛'
         return result
 
 
@@ -134,7 +138,6 @@ class Users:
     def current(self):
         self.__switch()
         return self.__current
-
 
 
 if __name__ == "__main__":

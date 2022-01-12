@@ -34,7 +34,7 @@ class Board:
                 self.__winner = four_pieces[0]
                 return True
 
-        # check for horizontal lines
+        # check for vertical lines
         column = list(map(lambda x: x[col], self.board)) # the column to test
         for shift in range(-3, 4):
             if lin+shift+4 > self.TAILLE_GRILLE_X:
@@ -49,7 +49,7 @@ class Board:
 
         # check for diagonal lines
         for shift in range(-3, 4):
-            # / diagonal
+            # \ diagonal
             try:
                 four_pieces = [self.board[col+x+shift-4][lin+x+shift-4]
                         for x in range(4)]
@@ -58,12 +58,12 @@ class Board:
                 continue
             if len(four_pieces) != 4:  # must be of length 4
                 continue
-            print('/', four_pieces)
+            print('\\', four_pieces)
             if all_equal_and_non_zero(four_pieces):
                 self.__winner = four_pieces[0]
                 return False
 
-            # \ diagonal
+            # / diagonal
             try:
                 four_pieces = [self.board[col+x+shift][lin-x-shift]
                     for x in range(4)]
@@ -72,7 +72,7 @@ class Board:
                 continue
             if len(four_pieces) != 4:  # must be of length 4
                 continue
-            print('\\', four_pieces)
+            print('/', four_pieces)
             if all_equal_and_non_zero(four_pieces):
                 self.__winner = four_pieces[0]
                 return True
@@ -156,6 +156,6 @@ if __name__ == "__main__":
     my_game.play(users.current(), 6)
     my_game.play(users.current(), 5)
     print(my_game)
-    print(my_game.check_winner(6))
+    print(my_game.check_winner(5))
 
 

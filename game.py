@@ -29,7 +29,7 @@ class Board:
             if col+shift+4 > self.TAILLE_GRILLE_X:
                 break
             four_pieces = line[col+shift:col+shift+4]
-            print('-', four_pieces)
+            print('-', four_pieces, col+shift, col+shift+4)
             if all_equal_and_non_zero(four_pieces):
                 self.__winner = four_pieces[0]
                 return True
@@ -42,7 +42,7 @@ class Board:
             four_pieces = column[lin+shift:lin+shift+4]
             if len(four_pieces) != 4:
                 continue
-            print('|', four_pieces)
+            print('|', four_pieces, lin+shift, lin+shift+4)
             if all_equal_and_non_zero(four_pieces):
                 self.__winner = four_pieces[0]
                 return True
@@ -58,7 +58,8 @@ class Board:
                 continue
             if len(four_pieces) != 4:  # must be of length 4
                 continue
-            print('\\', four_pieces)
+            print('\\', four_pieces,
+                    col+shift-4, lin+shift-4, '->', col+shift, lin+shift)
             if all_equal_and_non_zero(four_pieces):
                 self.__winner = four_pieces[0]
                 return False

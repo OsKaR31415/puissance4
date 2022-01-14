@@ -1,6 +1,9 @@
 #!/usr/bin/python3
+from users_gestion import Users
 
 def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
+    """Function to test if a list is made of elements that are all equal and
+    different from 0."""
     if len(list_pawns) == 0:
         return False
     # if there is one zero, they can't be all equal *and non zero*
@@ -22,6 +25,9 @@ class Board:
         self.__winner = None
 
     def game_won(self, column: int) -> bool:
+        """Method to test if the game has been won.
+        If it is the case, it sets the __winner attribute to the winner's index.
+        """
         # coordinates of the last added pawn
         lin, col = self.__which_line_to_add(column)+1, column
 
@@ -116,17 +122,20 @@ class Board:
         return row_index - 1
 
     def is_column_full(self, column: int) -> bool:
+        """Returns True if the givent column is full, False otherwise."""
         if all(map(lambda x: 0!=x[column], self.board)):
             return True
         return False
 
     def win_message(self):
+        """Prints a simple message to show who is the winner."""
         print(f"bravo, le joueur {self.__winner} à gagné !")
 
     def __str__(self):
+        """Returns the grid properly formatter to be played."""
         result = '┏' + "━"*self.TAILLE_GRILLE_X + '┓\n'
         for line in self.board:
-            result += '┣'
+            result += '┃'
             for cell in line:
                 if cell == 0:
                     result += " "
@@ -137,28 +146,12 @@ class Board:
                 else:
                     result += "~"
             result += "┃\n"
-        result += '┣' + "╋"*self.TAILLE_GRILLE_X + '┫\n'
+        result += '┣' + "━"*self.TAILLE_GRILLE_X + '┫\n'
         result += '┗'
         result += '0123456789abcdefghijklmnopqrstuvwxyz'[:self.TAILLE_GRILLE_X]
         result += '┛'
         return result
 
-
-class Users:
-    def __init__(self):
-        self.__current = 1
-
-    def switch(self):
-        if self.__current == 1:
-            self.__current = 2
-        else:
-            self.__current = 1
-
-    def current(self):
-        return self.__current
-
-    def current_logo(self):
-        return 'OX'[self.__current - 1]
 
 def main():
     my_game = Board()

@@ -1,7 +1,7 @@
 from users_gestion import Users
 
-PLAYER_1_LOGO   = "\u001b[31m●\u001b[0m"
-PLAYER_2_LOGO   = "\u001b[33m●\u001b[0m"
+PLAYER_1_LOGO   = "\u001b[31m█\u001b[0m"
+PLAYER_2_LOGO   = "\u001b[33m█\u001b[0m"
 EMPTY_CELL_LOGO = " "
 
 def all_equal_and_non_zero(list_pawns: list[int]) -> bool:

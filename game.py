@@ -2,7 +2,7 @@ from users_gestion import Users
 
 PLAYER_1_LOGO   = "\u001b[31m●\u001b[0m"
 PLAYER_2_LOGO   = "\u001b[33m●\u001b[0m"
-EMPTY_CELL_LOGO = "\u001b[38;5;233m█\u001b[0m"
+EMPTY_CELL_LOGO = " "
 
 def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
     """Function to test if a list is made of elements that are all equal and
@@ -162,7 +162,7 @@ def main():
 ┗━╸┗━┛╹ ╹╹ ╹┗━╸┗━╸ ╹      ╹
        by OsKaR31415
 """)
-    my_game = Board(14, 10)
+    my_game = Board(9, 12)
     user = Users()
     continue_game = True
     while continue_game:

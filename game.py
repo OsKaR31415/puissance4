@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+
 from users_gestion import Users
 
 def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
@@ -126,8 +126,8 @@ class Board:
         return False
 
     def win_message(self):
-        """Prints a simple message to show who is the winner."""
-        print(f"bravo, le joueur {self.__winner} à gagné !")
+        """Returns a simple message to show who is the winner."""
+        return f"bravo, le joueur {self.__winner} à gagné !"
 
     def __str__(self):
         """Returns the grid properly formatter to be played."""

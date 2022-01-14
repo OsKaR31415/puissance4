@@ -1,5 +1,8 @@
 #!/bin/python3
 
+PLAYER_1_LOGO = "\u001b[31m●\u001b[0m"
+PLAYER_2_LOGO = "\u001b[33m●\u001b[0m"
+
 class Users:
     """
     Simple class to manipulate 2 users.
@@ -24,7 +27,7 @@ class Users:
 
     def current_logo(self):
         """Return the logo of the current user.
-        The user 1 's logo is 'O'.
-        The user 2 's logo is 'X'.
+        The user 1 's logo is PLAYER_1_LOGO
+        The user 2 's logo is PLAYER_2_LOGO
         """
-        return 'OX'[self.__current - 1]
+        return (PLAYER_1_LOGO, PLAYER_2_LOGO)[self.__current - 1]

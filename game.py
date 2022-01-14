@@ -1,5 +1,8 @@
-
 from users_gestion import Users
+
+PLAYER_1_LOGO   = "\u001b[31m●\u001b[0m"
+PLAYER_2_LOGO   = "\u001b[33m●\u001b[0m"
+EMPTY_CELL_LOGO = "\u001b[38;5;233m█\u001b[0m"
 
 def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
     """Function to test if a list is made of elements that are all equal and
@@ -127,7 +130,8 @@ class Board:
 
     def win_message(self):
         """Returns a simple message to show who is the winner."""
-        return f"bravo, le joueur {self.__winner} à gagné !"
+        winner_logo = (PLAYER_1_LOGO, PLAYER_2_LOGO)[self.__winner-1]
+        return f"bravo, le joueur {winner_logo} à gagné !"
 
     def __str__(self):
         """Returns the grid properly formatter to be played."""
@@ -136,11 +140,11 @@ class Board:
             result += '┃'
             for cell in line:
                 if cell == 0:
-                    result += " "
+                    result += EMPTY_CELL_LOGO
                 elif cell == 1:
-                    result += "O"
+                    result += PLAYER_1_LOGO
                 elif cell == 2:
-                    result += "X"
+                    result += PLAYER_2_LOGO
                 else:
                     result += "~"
             result += "┃\n"
@@ -158,7 +162,7 @@ def main():
 ┗━╸┗━┛╹ ╹╹ ╹┗━╸┗━╸ ╹      ╹
        by OsKaR31415
 """)
-    my_game = Board(7, 6)
+    my_game = Board(14, 10)
     user = Users()
     continue_game = True
     while continue_game:

@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 
-def all_equal_and_non_zero(list_pieces: list[int]) -> bool:
+def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
+    if len(list_pawns) == 0:
+        return False
     # if there is one zero, they can't be all equal *and non zero*
-    if list_pieces[0] == 0:
+    if list_pawns[0] == 0:
         return False
     # if the set is only one element, they are all equal
-    if len(set(list_pieces)) == 1:
+    if len(set(list_pawns)) == 1:
         return True
     # else, they are different
     return False
@@ -19,8 +21,8 @@ class Board:
                 for _ in range(self.TAILLE_GRILLE_Y)]
         self.__winner = None
 
-    def check_winner(self, column: int) -> bool:
-        # coordinates of the last added piece
+    def game_won(self, column: int) -> bool:
+        # coordinates of the last added pawn
         lin, col = self.__which_line_to_add(column)+1, column
 
         # check for horizontal lines
@@ -28,10 +30,10 @@ class Board:
         for shift in range(-3, 4):
             if col+shift+4 > self.TAILLE_GRILLE_X:
                 break
-            four_pieces = line[col+shift:col+shift+4]
-            print('-', four_pieces, col+shift, col+shift+4)
-            if all_equal_and_non_zero(four_pieces):
-                self.__winner = four_pieces[0]
+            four_pawns = line[col+shift:col+shift+4]
+            # print('-', four_pawns, col+shift, col+shift+4)
+            if all_equal_and_non_zero(four_pawns):
+                self.__winner = four_pawns[0]
                 return True
 
         # check for vertical lines
@@ -39,58 +41,68 @@ class Board:
         for shift in range(-3, 4):
             if lin+shift+4 > self.TAILLE_GRILLE_X:
                 break
-            four_pieces = column[lin+shift:lin+shift+4]
-            if len(four_pieces) != 4:
+            four_pawns = column[lin+shift:lin+shift+4]
+            if len(four_pawns) != 4:
                 continue
-            print('|', four_pieces, lin+shift, lin+shift+4)
-            if all_equal_and_non_zero(four_pieces):
-                self.__winner = four_pieces[0]
+            # print('|', four_pawns, lin+shift, lin+shift+4)
+            if all_equal_and_non_zero(four_pawns):
+                self.__winner = four_pawns[0]
                 return True
 
         # check for diagonal lines
         for shift in range(-3, 4):
             # \ diagonal
             try:
-                four_pieces = [self.board[col+x+shift-4][lin+x+shift-4]
+                four_pawns = [self.board[col+x+shift-4][lin+x+shift-4]
                         for x in range(4)]
             except IndexError:
-                print('.')
+                # print('.')
                 continue
-            if len(four_pieces) != 4:  # must be of length 4
+            if len(four_pawns) != 4:  # must be of length 4
                 continue
-            print('\\', four_pieces,
-                    col+shift-4, lin+shift-4, '->', col+shift, lin+shift)
-            if all_equal_and_non_zero(four_pieces):
-                self.__winner = four_pieces[0]
+            # print('\\', four_pawns,
+            #         col+shift-4, lin+shift-4, '->', col+shift, lin+shift)
+            if all_equal_and_non_zero(four_pawns):
+                self.__winner = four_pawns[0]
                 return False
 
             # / diagonal
             try:
-                four_pieces = [self.board[col+x+shift][lin-x-shift]
+                four_pawns = [self.board[col+x+shift][lin-x-shift]
                     for x in range(4)]
             except IndexError:
-                print('.')
+                # print('.')
                 continue
-            if len(four_pieces) != 4:  # must be of length 4
+            if len(four_pawns) != 4:  # must be of length 4
                 continue
-            print('/', four_pieces)
-            if all_equal_and_non_zero(four_pieces):
-                self.__winner = four_pieces[0]
+            # print('/', four_pawns,
+            #         col+shift-4, lin-shift-4, '->', col+shift, lin-shift)
+            if all_equal_and_non_zero(four_pawns):
+                self.__winner = four_pawns[0]
+                # print("✓")
                 return True
         return False
 
 
 
-    def play(self, player: int, column: int) -> bool:
+    def play_if_legit(self, player: int, column: int) -> bool:
         """Check if the movement is legal and the play it.
         If the movement is not legit, it will return False."""
         if self.is_column_full(column):
             return False
         self.__add_at_column(player, column)
+        print("played at", column, self.__which_line_to_add(column))
         return True
 
+    def play(self, player: int, column: int) -> bool:
+        """Play the movement if it is legit.
+        Returns True if the game can continue, and False if one player has won.
+        """
+        self.play_if_legit(player, column)
+        return not self.game_won(column)
+
     def __add_at_column(self, player: int, column: int) -> None:       
-        """Add the player's piece at the correct column."""
+        """Add the player's pawn at the correct column."""
         self.board[self.__which_line_to_add(column)][column] = int(player)
 
     def __which_line_to_add(self, column: int) -> int:
@@ -100,7 +112,7 @@ class Board:
                 row_index += 1
         except IndexError:
             pass
-        # The correct row is one before the indexError
+        # the correct line is the one before the IndexError
         return row_index - 1
 
     def is_column_full(self, column: int) -> bool:
@@ -108,10 +120,13 @@ class Board:
             return True
         return False
 
+    def win_message(self):
+        print(f"bravo, le joueur {self.__winner} à gagné !")
+
     def __str__(self):
         result = '┏' + "━"*self.TAILLE_GRILLE_X + '┓\n'
         for line in self.board:
-            result += '┃'
+            result += '┣'
             for cell in line:
                 if cell == 0:
                     result += " "
@@ -122,41 +137,45 @@ class Board:
                 else:
                     result += "~"
             result += "┃\n"
-        result += '┗' + "┻"*self.TAILLE_GRILLE_X + '┛'
+        result += '┣' + "╋"*self.TAILLE_GRILLE_X + '┫\n'
+        result += '┗'
+        result += '0123456789abcdefghijklmnopqrstuvwxyz'[:self.TAILLE_GRILLE_X]
+        result += '┛'
         return result
 
 
 class Users:
     def __init__(self):
-        self.__current = 0 # start with 0 but is changed when using __switch
+        self.__current = 1
 
-    def __switch(self):
+    def switch(self):
         if self.__current == 1:
             self.__current = 2
         else:
             self.__current = 1
 
     def current(self):
-        self.__switch()
         return self.__current
+
+    def current_logo(self):
+        return 'OX'[self.__current - 1]
+
+def main():
+    my_game = Board()
+    user = Users()
+    continue_game = True
+    while continue_game:
+        print(my_game)
+        column_to_play = int(input(f"player {user.current_logo()} > "), 36)
+        continue_game = my_game.play(user.current(), column_to_play)
+        user.switch()
+    print(my_game)
+    print(my_game.win_message())
 
 
 if __name__ == "__main__":
-    my_game = Board()
-    users = Users()
+    main()
 
-    my_game.play(users.current(), 2)
-    my_game.play(users.current(), 3)
-    my_game.play(users.current(), 3)
-    my_game.play(users.current(), 4)
-    my_game.play(users.current(), 5)
-    my_game.play(users.current(), 4)
-    my_game.play(users.current(), 4)
-    my_game.play(users.current(), 5)
-    my_game.play(users.current(), 5)
-    my_game.play(users.current(), 6)
-    my_game.play(users.current(), 5)
-    print(my_game)
-    print(my_game.check_winner(5))
+
 
 

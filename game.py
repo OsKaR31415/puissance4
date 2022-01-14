@@ -152,11 +152,16 @@ class Board:
 
 
 def main():
+    print("""
+┏━╸┏━┓┏┓╻┏┓╻┏━╸┏━╸╺┳╸   ╻ ╻
+┃  ┃ ┃┃┗┫┃┗┫┣╸ ┃   ┃ ╺━╸┗━┫
+┗━╸┗━┛╹ ╹╹ ╹┗━╸┗━╸ ╹      ╹
+       by OsKaR31415
+""")
     my_game = Board(7, 6)
     user = Users()
     continue_game = True
     while continue_game:
-        print('\r'*(my_game.BOARD_SIZE_Y + 3))
         print(my_game)
         column_to_play = int(input(f"player {user.current_logo()} > "), 36)
         if column_to_play < 0 or column_to_play > my_game.BOARD_SIZE_X -1:

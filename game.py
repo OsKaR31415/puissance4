@@ -96,7 +96,6 @@ class Board:
         if self.is_column_full(column):
             return False
         self.__add_at_column(player, column)
-        print("played at", column, self.__which_line_to_add(column))
         return True
 
     def play(self, player: int, column: int) -> bool:
@@ -157,6 +156,7 @@ def main():
     user = Users()
     continue_game = True
     while continue_game:
+        print('\r'*(my_game.BOARD_SIZE_Y + 3))
         print(my_game)
         column_to_play = int(input(f"player {user.current_logo()} > "), 36)
         if column_to_play < 0 or column_to_play > my_game.BOARD_SIZE_X -1:

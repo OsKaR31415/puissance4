@@ -16,12 +16,11 @@ def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
     return False
 
 class Board:
-    TAILLE_GRILLE_X = 10
-    TAILLE_GRILLE_Y = 6
-
-    def __init__(self):
-        self.board = [[0 for _ in range(self.TAILLE_GRILLE_X)]
-                for _ in range(self.TAILLE_GRILLE_Y)]
+    def __init__(self, board_size_x: int =10, board_size_y: int =6):
+        self.BOARD_SIZE_X = int(board_size_x)
+        self.BOARD_SIZE_Y = int(board_size_y)
+        self.board = [[0 for _ in range(self.BOARD_SIZE_X)]
+                for _ in range(self.BOARD_SIZE_Y)]
         self.__winner = None
 
     def game_won(self, column: int) -> bool:
@@ -34,7 +33,7 @@ class Board:
         # check for horizontal lines
         line = self.board[lin] # the line to test
         for shift in range(-3, 4):
-            if col+shift+4 > self.TAILLE_GRILLE_X:
+            if col+shift+4 > self.BOARD_SIZE_X:
                 break
             four_pawns = line[col+shift:col+shift+4]
             # print('-', four_pawns, col+shift, col+shift+4)
@@ -45,7 +44,7 @@ class Board:
         # check for vertical lines
         column = list(map(lambda x: x[col], self.board)) # the column to test
         for shift in range(-3, 4):
-            if lin+shift+4 > self.TAILLE_GRILLE_X:
+            if lin+shift+4 > self.BOARD_SIZE_X:
                 break
             four_pawns = column[lin+shift:lin+shift+4]
             if len(four_pawns) != 4:
@@ -133,7 +132,7 @@ class Board:
 
     def __str__(self):
         """Returns the grid properly formatter to be played."""
-        result = '┏' + "━"*self.TAILLE_GRILLE_X + '┓\n'
+        result = '┏' + "━"*self.BOARD_SIZE_X + '┓\n'
         for line in self.board:
             result += '┃'
             for cell in line:
@@ -146,20 +145,23 @@ class Board:
                 else:
                     result += "~"
             result += "┃\n"
-        result += '┣' + "━"*self.TAILLE_GRILLE_X + '┫\n'
+        result += '┣' + "━"*self.BOARD_SIZE_X + '┫\n'
         result += '┗'
-        result += '0123456789abcdefghijklmnopqrstuvwxyz'[:self.TAILLE_GRILLE_X]
+        result += '0123456789abcdefghijklmnopqrstuvwxyz'[:self.BOARD_SIZE_X]
         result += '┛'
         return result
 
 
 def main():
-    my_game = Board()
+    my_game = Board(7, 6)
     user = Users()
     continue_game = True
     while continue_game:
         print(my_game)
         column_to_play = int(input(f"player {user.current_logo()} > "), 36)
+        if column_to_play < 0 or column_to_play > my_game.BOARD_SIZE_X -1:
+            print("this is not a valid column !")
+            continue
         continue_game = my_game.play(user.current(), column_to_play)
         user.switch()
     print(my_game)

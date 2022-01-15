@@ -1,8 +1,8 @@
 from users_gestion import Users
 
-PLAYER_1_LOGO   = "\u001b[31m█\u001b[0m"
-PLAYER_2_LOGO   = "\u001b[33m█\u001b[0m"
-EMPTY_CELL_LOGO = " "
+PLAYER_1_LOGO   = "\u001b[31m〇\u001b[0m"
+PLAYER_2_LOGO   = "\u001b[33m〇\u001b[0m"
+EMPTY_CELL_LOGO = "  "
 
 def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
     """Function to test if a list is made of elements that are all equal and
@@ -135,7 +135,7 @@ class Board:
 
     def __str__(self):
         """Returns the grid properly formatter to be played."""
-        result = '┏' + "━"*self.BOARD_SIZE_X + '┓\n'
+        result = '┏' + "━"*self.BOARD_SIZE_X*len(EMPTY_CELL_LOGO) + '┓\n'
         for line in self.board:
             result += '┃'
             for cell in line:
@@ -148,9 +148,12 @@ class Board:
                 else:
                     result += "~"
             result += "┃\n"
-        result += '┣' + "━"*self.BOARD_SIZE_X + '┫\n'
+        result += '┣' + "━"*self.BOARD_SIZE_X*len(EMPTY_CELL_LOGO) + '┫\n'
         result += '┗'
-        result += '0123456789abcdefghijklmnopqrstuvwxyz'[:self.BOARD_SIZE_X]
+        columns = '0123456789abcdefghijklmnopqrstuvwxyz'[:self.BOARD_SIZE_X]
+        columns = (' '*(len(EMPTY_CELL_LOGO)-1)).join(list(columns))
+        columns += ' '*(len(EMPTY_CELL_LOGO)-1)
+        result  += columns
         result += '┛'
         return result
 
@@ -167,7 +170,10 @@ def main():
     continue_game = True
     while continue_game:
         print(my_game)
-        column_to_play = int(input(f"player {user.current_logo()} > "), 36)
+        try:
+            column_to_play = int(input(f"player {user.current_logo()} > "), 36)
+        except ValueError:
+            continue
         if column_to_play < 0 or column_to_play > my_game.BOARD_SIZE_X -1:
             print("this is not a valid column !")
             continue

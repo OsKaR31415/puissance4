@@ -1,7 +1,7 @@
 #!/bin/python3
 
-PLAYER_1_LOGO = "\u001b[31m●\u001b[0m"
-PLAYER_2_LOGO = "\u001b[33m●\u001b[0m"
+PLAYER_1_LOGO = "\u001b[31m⬤ \u001b[0m"
+PLAYER_2_LOGO = "\u001b[33m⬤ \u001b[0m"
 
 class Users:
     """

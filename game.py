@@ -1,8 +1,13 @@
 from users_gestion import Users
 
-PLAYER_1_LOGO   = "\u001b[31m〇\u001b[0m"
-PLAYER_2_LOGO   = "\u001b[33m〇\u001b[0m"
+PLAYER_1_LOGO   = "\u001b[31m⬤ \u001b[0m"
+PLAYER_2_LOGO   = "\u001b[33m⬤ \u001b[0m"
 EMPTY_CELL_LOGO = "  "
+
+
+def pawn(user: int) -> str:
+    """Gives the proper representation for a pawn of the given user."""
+    return (EMPTY_CELL_LOGO, PLAYER_1_LOGO, PLAYER_2_LOGO)[user]
 
 def all_equal_and_non_zero(list_pawns: list[int]) -> bool:
     """Function to test if a list is made of elements that are all equal and
@@ -39,7 +44,7 @@ class Board:
             if col+shift+4 > self.BOARD_SIZE_X:
                 break
             four_pawns = line[col+shift:col+shift+4]
-            # print('-', four_pawns, col+shift, col+shift+4)
+            print('-', four_pawns, col+shift, col+shift+4)
             if all_equal_and_non_zero(four_pawns):
                 self.__winner = four_pawns[0]
                 return True
@@ -52,45 +57,44 @@ class Board:
             four_pawns = column[lin+shift:lin+shift+4]
             if len(four_pawns) != 4:
                 continue
-            # print('|', four_pawns, lin+shift, lin+shift+4)
+            print('|', four_pawns, lin+shift, lin+shift+4)
             if all_equal_and_non_zero(four_pawns):
                 self.__winner = four_pawns[0]
                 return True
 
-        # check for diagonal lines
-        for shift in range(-3, 4):
-            # \ diagonal
+        # \ diagonal
+        for shift in range(-3, 5):
             try:
                 four_pawns = [self.board[col+x+shift-4][lin+x+shift-4]
                         for x in range(4)]
             except IndexError:
-                # print('.')
+                print('.')
                 continue
             if len(four_pawns) != 4:  # must be of length 4
                 continue
-            # print('\\', four_pawns,
-            #         col+shift-4, lin+shift-4, '->', col+shift, lin+shift)
+            print('\\', four_pawns,
+                    col+shift-4, lin+shift-4, '->', col+shift, lin+shift)
             if all_equal_and_non_zero(four_pawns):
                 self.__winner = four_pawns[0]
                 return False
 
-            # / diagonal
+        # / diagonal
+        for shift in range(-3, 5):
             try:
                 four_pawns = [self.board[col+x+shift][lin-x-shift]
                     for x in range(4)]
             except IndexError:
-                # print('.')
+                print('.')
                 continue
             if len(four_pawns) != 4:  # must be of length 4
                 continue
-            # print('/', four_pawns,
-            #         col+shift-4, lin-shift-4, '->', col+shift, lin-shift)
+            print('/', four_pawns,
+                    col+shift-4, lin-shift-4, '->', col+shift, lin-shift)
             if all_equal_and_non_zero(four_pawns):
                 self.__winner = four_pawns[0]
-                # print("✓")
+                print("✓")
                 return True
         return False
-
 
 
     def play_if_legit(self, player: int, column: int) -> bool:
@@ -139,14 +143,7 @@ class Board:
         for line in self.board:
             result += '┃'
             for cell in line:
-                if cell == 0:
-                    result += EMPTY_CELL_LOGO
-                elif cell == 1:
-                    result += PLAYER_1_LOGO
-                elif cell == 2:
-                    result += PLAYER_2_LOGO
-                else:
-                    result += "~"
+                result += pawn(cell)
             result += "┃\n"
         result += '┣' + "━"*self.BOARD_SIZE_X*len(EMPTY_CELL_LOGO) + '┫\n'
         result += '┗'
